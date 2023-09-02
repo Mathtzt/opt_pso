@@ -1,6 +1,6 @@
 from classes.experiments import Experiments
 from classes.enums_and_hints.experiments_dict import ExperimentsDict
-from classes.enums_and_hints.problem_enum import ProblemFuncNames, ProblemFuncOptValue
+from classes.enums_and_hints.problem_enum import ProblemFuncNames
 from classes.enums_and_hints.optimizers_enum import OptimizersNames
 from classes.enums_and_hints.pso_dict import PSODict
 
@@ -14,14 +14,20 @@ pso = PSODict(
     max_speed = 3.,
     cognitive_update_factor = 2.,
     social_update_factor = 2.,
-    reduce_omega_linearly = True
+    reduce_omega_linearly = True,
+    reduction_speed_factor = .1
 )
 
-exp_dict = ExperimentsDict
-exp_dict.name = 'teste_inicial'
-exp_dict.nexecucoes = 30
-exp_dict.functions = [ProblemFuncNames.F1_BASIC]
-exp_dict.optimizers = [pso]
+exp_dict = ExperimentsDict(
+    name = 'teste_inicial',
+    nexecucoes = 30,
+    functions = [
+        ProblemFuncNames.F1_BASIC
+        ],
+    optimizers = [
+        pso
+    ]
+)
 
 exp = Experiments(exp_dict = exp_dict)
 exp.main()

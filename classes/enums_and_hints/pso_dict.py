@@ -12,3 +12,4 @@ class PSODict(NamedTuple):
     cognitive_update_factor: float
     social_update_factor: float
     reduce_omega_linearly: bool
+    reduction_speed_factor: float

@@ -6,8 +6,6 @@ from classes.helper.utils import Utils
 
 from classes.optimizers.pso import PSO
 
-from tqdm import tqdm
-
 class Experiments:
     def __init__(self,
                  exp_dict: ExperimentsDict,
@@ -43,7 +41,8 @@ class Experiments:
                       max_speed = opt.max_speed,
                       cognitive_update_factor = opt.cognitive_update_factor,
                       social_update_factor = opt.social_update_factor,
-                      reduce_omega_linearly = opt.reduce_omega_linearly)
+                      reduce_omega_linearly = opt.reduce_omega_linearly,
+                      reduction_speed_factor = opt.reduction_speed_factor)
             
             return pso
     

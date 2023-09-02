@@ -15,6 +15,7 @@ class PSO(Algoritmo):
                  cognitive_update_factor: float = 2.,
                  social_update_factor: float = 2.,
                  reduce_omega_linearly: bool = False,
+                 reduction_speed_factor: float = 1,
                  show_log: bool = True):
         super().__init__(dimensions, population_size, bounds)
 
@@ -24,11 +25,16 @@ class PSO(Algoritmo):
         self.cognitive_update_factor = cognitive_update_factor
         self.social_update_factor = social_update_factor
         self.reduce_omega_linearly = reduce_omega_linearly
+        self.reduction_speed_factor = reduction_speed_factor
         self.show_log = show_log
 
         self.toolbox = base.Toolbox()
 
-    def main(self, func_name: ProblemFuncNames, reset_classes: bool = False, nexecucao: int = 0, dirpath: str = './'):
+    def main(self, 
+             func_name: ProblemFuncNames, 
+             reset_classes: bool = False, 
+             nexecucao: int = 0, 
+             dirpath: str = './'):
         func_ = self.obter_func_objetivo(func_name = func_name)
         self.toolbox.register(alias = 'evaluate', 
                               function = func_[0])
@@ -65,7 +71,7 @@ class PSO(Algoritmo):
         for idx, generation in enumerate(range(1, self.max_evaluations + 1)):
             # reduzindo omega linearmente
             if self.reduce_omega_linearly:
-                self.omega = initial_omega - (idx * (initial_omega - 0.4) / (10000))
+                self.omega = initial_omega - (idx * (initial_omega - 0.4) / (self.max_evaluations * self.reduction_speed_factor))
             
             # avaliar todas as partículas na população
             for particle in population:
@@ -81,7 +87,11 @@ class PSO(Algoritmo):
                     best.fitness.values = particle.fitness.values
                 # atualizando número de avaliações, verificando limites de tempo de otimização permitidos
                 nevaluations += 1
-                if abs(best.fitness.values[0] - func_[1]) < 10e-8 or nevaluations >= self.max_evaluations:
+                stop_cond1 = abs(best.fitness.values[0] - func_[1]) < 10e-8
+                stop_cond2 = nevaluations >= self.max_evaluations
+                if stop_cond1 or stop_cond2:
+                    if stop_cond1:
+                        best.fitness.values = (0.0,)
                     finish_optimization = True
                     igeneration_stopped = idx
                     break
