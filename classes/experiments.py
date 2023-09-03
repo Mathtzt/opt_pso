@@ -19,7 +19,7 @@ class Experiments:
 
     def create_dirs(self):
         root_path = Utils.create_folder(path = self.base_dir, name = "results")
-        exp_path = Utils.create_folder(path = root_path, name = "exp", use_date = True)
+        exp_path = Utils.create_folder(path = root_path, name = self.exp_dict.name, use_date = True)
 
         return root_path, exp_path
     
@@ -47,10 +47,10 @@ class Experiments:
             return pso
     
     def main(self):
-        problem_path, imgs_path = self.create_exp_dirs(problem_name=self.exp_dict.name)
 
         for idx, optimizer in enumerate(self.exp_dict.optimizers):
             for func in self.exp_dict.functions:
+                problem_path, imgs_path = self.create_exp_dirs(problem_name=func.value)
                 for exec in range(self.exp_dict.nexecucoes):
                     opt = self.init_optimizer(optimizer)
-                    opt.main(func_name = func, reset_classes = True, nexecucao = exec, dirpath = problem_path)
+                    opt.main(func_name = func, nexecucao = exec, exp_path = problem_path, imgs_path = imgs_path)

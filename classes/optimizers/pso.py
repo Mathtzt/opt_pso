@@ -1,3 +1,4 @@
+import pandas as pd
 import numpy as np
 from classes.base.algoritmo import Algoritmo
 
@@ -28,13 +29,14 @@ class PSO(Algoritmo):
         self.reduction_speed_factor = reduction_speed_factor
         self.show_log = show_log
 
+        self.nout_bounds = 0
         self.toolbox = base.Toolbox()
 
     def main(self, 
-             func_name: ProblemFuncNames, 
-             reset_classes: bool = False, 
+             func_name: ProblemFuncNames,
              nexecucao: int = 0, 
-             dirpath: str = './'):
+             exp_path: str = './',
+             imgs_path: str = './'):
         func_ = self.obter_func_objetivo(func_name = func_name)
         self.toolbox.register(alias = 'evaluate', 
                               function = func_[0])
@@ -118,14 +120,29 @@ class PSO(Algoritmo):
 
         avg_fitness_history = [logbook[i]['avg'] for i in range(len(logbook))]
 
+        self.print_informacoes_gerais_optimizacao(best, igeneration_stopped)
+        self.criar_grafico_evolucao_fitness(hist_best_fitness = best_fitness_history,
+                                            hist_avg_fitness = avg_fitness_history,
+                                            imgs_path = imgs_path, 
+                                            img_name = f"pso_exec_{nexecucao}")
+        self.criar_grafico_evolucao_distancia_media_pontos(hist_dist_pontos = avg_euclidian_distance_history,
+                                                           imgs_path = imgs_path,
+                                                           img_name = f"pso_distance_particles_{nexecucao}")
+        self.criar_registro_geral(nexecucao = nexecucao,
+                                  func_objetivo = func_name,
+                                  best_particle = best,
+                                  best_fitness = best.fitness.values[0],
+                                  out_bounds = self.nout_bounds,
+                                  exp_path = exp_path)
+
+        del creator.FitnessMin
+        del creator.Particle
+
+    def print_informacoes_gerais_optimizacao(self, best, igeneration_stopped):
         print("-- Melhor partícula = ", best)
         print("-- Melhor fitness = ", best.fitness.values[0])
         print("-- Geração que parou a otimização = ", igeneration_stopped)
         print("-- Qtd de vezes que saiu do espaço de busca = ", self.nout_bounds)
-
-        if reset_classes:
-            del creator.FitnessMin
-            del creator.Particle
 
     def define_as_minimization_problem(self):
         creator.create(name = "FitnessMin",
@@ -184,3 +201,29 @@ class PSO(Algoritmo):
         self.toolbox.register(alias = 'update',
                               function = self.update_particle)
         
+    def criar_registro_geral(self, 
+                             nexecucao: int, 
+                             func_objetivo: str, 
+                             best_particle: list,
+                             best_fitness: list,
+                             out_bounds: int,
+                             exp_path: str):
+        d = {
+            'execucao': nexecucao,
+            'funcao_objetivo': func_objetivo,
+            'dimensoes': self.dimensions,
+            'tamanho_populacao': self.population_size,
+            'total_geracoes_realizadas': self.max_evaluations,
+            'range_position': self.bounds,
+            'omega': self.omega,
+            'reduce_omega_linearly': self.reduce_omega_linearly,
+            'range_speed': [self.min_speed, self.max_speed],
+            'cognitive_factor': self.cognitive_update_factor,
+            'social_factor': self.social_update_factor,
+            'best_particle': best_particle,
+            'best_fitness': best_fitness,
+            'out_bounds': out_bounds
+        }
+
+        self.salvar_registro_geral(registro = d,
+                                   exp_path = exp_path)

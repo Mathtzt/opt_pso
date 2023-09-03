@@ -26,9 +26,13 @@ class Algoritmo(ABC):
         self.nout_bounds = 0
     
     @abstractmethod
-    def main(self):
+    def main(self, 
+             func_name: ProblemFuncNames, 
+             nexecucao: int,
+             dirpath: str,
+             imgs_path: str):
         pass
-
+            
     def obter_func_objetivo(self, func_name: ProblemFuncNames):
         if func_name == ProblemFuncNames.F1_BASIC:
             selected_func = (self.f1_basic, ProblemFuncOptValue.F1_BASIC.value)
@@ -91,6 +95,13 @@ class Algoritmo(ABC):
         average_distance = np.mean(distances)
 
         return average_distance
+    
+    def salvar_registro_geral(self,
+                              registro: dict,
+                              exp_path: str):
+        
+        df_registro = pd.DataFrame([registro])
+        Utils.save_experiment_as_csv(base_dir = exp_path, dataframe = df_registro, filename = 'opt_history')
 
     def criar_grafico_evolucao_fitness(self, 
                                        hist_best_fitness: list, 
@@ -100,7 +111,7 @@ class Algoritmo(ABC):
                                        use_log: bool = False) -> None:
         
         plt.figure()
-        xticks_ajustado = [v * 500 for v in range(len(self.hist_best_fitness))]
+        xticks_ajustado = [v * 500 for v in range(len(hist_best_fitness))]
         
         plt.plot(xticks_ajustado, hist_best_fitness, color = 'green')
         plt.plot(xticks_ajustado, hist_avg_fitness, color = 'red')
