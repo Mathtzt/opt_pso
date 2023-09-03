@@ -19,7 +19,7 @@ pso = PSODict(
 )
 
 exp_dict = ExperimentsDict(
-    name = 'exp',
+    name = 'exp_inicial',
     nexecucoes = 30,
     functions = [
         ProblemFuncNames.F1_BASIC

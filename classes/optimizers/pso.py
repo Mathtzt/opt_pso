@@ -129,7 +129,7 @@ class PSO(Algoritmo):
                                                            imgs_path = imgs_path,
                                                            img_name = f"pso_distance_particles_{nexecucao}")
         self.criar_registro_geral(nexecucao = nexecucao,
-                                  func_objetivo = func_name,
+                                  func_objetivo = func_name.value,
                                   best_particle = best,
                                   best_fitness = best.fitness.values[0],
                                   out_bounds = self.nout_bounds,
@@ -217,6 +217,7 @@ class PSO(Algoritmo):
             'range_position': self.bounds,
             'omega': self.omega,
             'reduce_omega_linearly': self.reduce_omega_linearly,
+            'reduction_speed_factor': self.reduction_speed_factor,
             'range_speed': [self.min_speed, self.max_speed],
             'cognitive_factor': self.cognitive_update_factor,
             'social_factor': self.social_update_factor,
