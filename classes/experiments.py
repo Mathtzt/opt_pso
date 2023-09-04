@@ -2,9 +2,11 @@ from classes.enums_and_hints.problem_enum import ProblemFuncNames
 from classes.enums_and_hints.optimizers_enum import OptimizersNames
 from classes.enums_and_hints.experiments_dict import ExperimentsDict
 from classes.enums_and_hints.pso_dict import PSODict
+from classes.enums_and_hints.de_dict import DEDict
 from classes.helper.utils import Utils
 
 from classes.optimizers.pso import PSO
+from classes.optimizers.de import DE
 
 class Experiments:
     def __init__(self,
@@ -45,6 +47,18 @@ class Experiments:
                       reduction_speed_factor = opt.reduction_speed_factor)
             
             return pso
+        
+        if isinstance(optimizer_dict, DEDict):
+            opt: DEDict = optimizer_dict
+
+            de = DE(dimensions = opt.dimensions,
+                    population_size = opt.population_size,
+                    bounds = opt.bounds,
+                    perc_mutation = opt.perc_mutation,
+                    perc_crossover = opt.perc_crossover,
+                    mut_strategy = opt.mut_strategy)
+            
+            return de
     
     def main(self):
 

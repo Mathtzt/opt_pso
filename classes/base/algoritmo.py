@@ -8,7 +8,8 @@ from abc import ABC, abstractmethod
 from classes.helper.utils import Utils
 from classes.enums_and_hints.problem_enum import ProblemFuncNames, ProblemFuncOptValue
 
-from opfunu.cec.cec2014.function import F1, F2, F4, F6, F7, F8, F9, F14
+import opfunu
+# from opfunu.cec.cec2014.function import F1, F2, F4, F6, F7, F8, F9, F14
 
 class Algoritmo(ABC):
 
@@ -35,25 +36,27 @@ class Algoritmo(ABC):
             
     def obter_func_objetivo(self, func_name: ProblemFuncNames):
         if func_name == ProblemFuncNames.F1_BASIC:
-            selected_func = (self.f1_basic, ProblemFuncOptValue.F1_BASIC.value)
+            raise NotImplementedError("Essa função está em processo de refatoração.")
+            # selected_func = (self.f1_basic, ProblemFuncOptValue.F1_BASIC.value)
         elif func_name == ProblemFuncNames.F1:
-            selected_func = (F1, ProblemFuncOptValue.F1.value)
+            selected_func = (opfunu.cec_based.F12014(ndim=self.dimensions), ProblemFuncOptValue.F1.value)
         elif func_name == ProblemFuncNames.F2:
-            selected_func = (F2, ProblemFuncOptValue.F2.value)
+            selected_func = (opfunu.cec_based.F22014(ndim=self.dimensions), ProblemFuncOptValue.F2.value)
         elif func_name == ProblemFuncNames.F4:
-            selected_func = (F4, ProblemFuncOptValue.F4.value)
+            selected_func = (opfunu.cec_based.F42014(ndim=self.dimensions), ProblemFuncOptValue.F4.value)
         elif func_name == ProblemFuncNames.F6:
-            selected_func = (F6, ProblemFuncOptValue.F6.value)
+            selected_func = (opfunu.cec_based.F62014(ndim=self.dimensions), ProblemFuncOptValue.F6.value)
         elif func_name == ProblemFuncNames.F7:
-            selected_func = (F7, ProblemFuncOptValue.F7.value)
+            selected_func = (opfunu.cec_based.F72014(ndim=self.dimensions), ProblemFuncOptValue.F7.value)
         elif func_name == ProblemFuncNames.F8_BASIC:
-            selected_func = (self.f8_basic, ProblemFuncOptValue.F8_BASIC.value)
+            raise NotImplementedError("Essa função está em processo de refatoração.")
+            # selected_func = (self.f8_basic, ProblemFuncOptValue.F8_BASIC.value)
         elif func_name == ProblemFuncNames.F8:
-            selected_func = (F8, ProblemFuncOptValue.F8.value)
+            selected_func = (opfunu.cec_based.F82014(ndim=self.dimensions), ProblemFuncOptValue.F8.value)
         elif func_name == ProblemFuncNames.F9:
-            selected_func = (F9, ProblemFuncOptValue.F9.value)
+            selected_func = (opfunu.cec_based.F92014(ndim=self.dimensions), ProblemFuncOptValue.F9.value)
         elif func_name == ProblemFuncNames.F14:
-            selected_func = (F14, ProblemFuncOptValue.F14.value)
+            selected_func = (opfunu.cec_based.F142014(ndim=self.dimensions), ProblemFuncOptValue.F14.value)
         else:
             raise ValueError("Função selecionada não está implementada ainda.")
 

@@ -2,7 +2,9 @@ from classes.experiments import Experiments
 from classes.enums_and_hints.experiments_dict import ExperimentsDict
 from classes.enums_and_hints.problem_enum import ProblemFuncNames
 from classes.enums_and_hints.optimizers_enum import OptimizersNames
+from classes.enums_and_hints.params_enum import DEMultStrategyNames
 from classes.enums_and_hints.pso_dict import PSODict
+from classes.enums_and_hints.de_dict import DEDict
 
 pso = PSODict(
     name = OptimizersNames.PSO,
@@ -18,14 +20,25 @@ pso = PSODict(
     reduction_speed_factor = .1
 )
 
+de = DEDict(
+    name = OptimizersNames.DE,
+    dimensions = 10,
+    population_size = 10,
+    bounds = [-100, 100],
+    perc_mutation = .8,
+    perc_crossover = .4,
+    mut_strategy = DEMultStrategyNames.RANDTOBEST1
+)
+
 exp_dict = ExperimentsDict(
     name = 'exp_inicial',
     nexecucoes = 30,
     functions = [
-        ProblemFuncNames.F1_BASIC
+        ProblemFuncNames.F1
         ],
     optimizers = [
-        pso
+        # pso,
+        de
     ]
 )
 

@@ -39,7 +39,7 @@ class PSO(Algoritmo):
              imgs_path: str = './'):
         func_ = self.obter_func_objetivo(func_name = func_name)
         self.toolbox.register(alias = 'evaluate', 
-                              function = func_[0])
+                              function = func_[0].evaluate)
         
         ## inicializações
         self.define_as_minimization_problem()
@@ -61,7 +61,7 @@ class PSO(Algoritmo):
 
         ## loop
         best = None
-        initial_omega = self.omega
+        omega = self.omega
         igeneration_stopped = 0
         nevaluations = 0
         finish_optimization = False
@@ -73,7 +73,7 @@ class PSO(Algoritmo):
         for idx, generation in enumerate(range(1, self.max_evaluations + 1)):
             # reduzindo omega linearmente
             if self.reduce_omega_linearly:
-                self.omega = initial_omega - (idx * (initial_omega - 0.4) / (self.max_evaluations * self.reduction_speed_factor))
+                omega = self.omega - (idx * (self.omega - 0.4) / (self.max_evaluations * self.reduction_speed_factor))
             
             # avaliar todas as partículas na população
             for particle in population:
@@ -100,7 +100,7 @@ class PSO(Algoritmo):
 
             # atualizando velocidade e posição
             for particle in population:
-                self.toolbox.update(particle, best)
+                self.toolbox.update(particle, best, omega)
 
             avg_euclidian_distance_history.append(self.calc_distancia_euclidiana_media_da_populacao(population))
             # salvando as estatísticas
@@ -111,7 +111,7 @@ class PSO(Algoritmo):
                                **stats.compile(population))
                 if self.show_log:
                     if self.reduce_omega_linearly:
-                        print(logbook.stream + f" | omega = {self.omega}")
+                        print(logbook.stream + f" | omega = {omega}")
                     else:
                         print(logbook.stream)
             
@@ -132,7 +132,7 @@ class PSO(Algoritmo):
                                   func_objetivo = func_name.value,
                                   best_particle = best,
                                   best_fitness = best.fitness.values[0],
-                                  out_bounds = self.nout_bounds,
+                                  igeneration_stopped = igeneration_stopped,
                                   exp_path = exp_path)
 
         del creator.FitnessMin
@@ -173,14 +173,14 @@ class PSO(Algoritmo):
                         
         self.toolbox.register('populationCreator', tools.initRepeat, list, self.toolbox.particleCreator)
 
-    def update_particle(self, particle, best):
+    def update_particle(self, particle, best, omega):
         local_update_factor = self.cognitive_update_factor * np.random.uniform(0, 1, particle.size)
         global_update_factor = self.social_update_factor * np.random.uniform(0, 1, particle.size)
 
         local_speed_update = local_update_factor * (particle.best - particle)
         global_speed_update = global_update_factor * (best - particle)
 
-        particle.speed = (self.omega * particle.speed) + (local_speed_update + global_speed_update)
+        particle.speed = (omega * particle.speed) + (local_speed_update + global_speed_update)
         # verificando se a nova posição sairá do espaço de busca. Se sim, ajustando para os limites.     
         out_bounds = False
         for i, speed in enumerate(particle.speed):
@@ -206,14 +206,14 @@ class PSO(Algoritmo):
                              func_objetivo: str, 
                              best_particle: list,
                              best_fitness: list,
-                             out_bounds: int,
+                             igeneration_stopped: int,
                              exp_path: str):
         d = {
             'execucao': nexecucao,
             'funcao_objetivo': func_objetivo,
             'dimensoes': self.dimensions,
             'tamanho_populacao': self.population_size,
-            'total_geracoes_realizadas': self.max_evaluations,
+            'total_geracoes_realizadas': igeneration_stopped,
             'range_position': self.bounds,
             'omega': self.omega,
             'reduce_omega_linearly': self.reduce_omega_linearly,
@@ -223,7 +223,7 @@ class PSO(Algoritmo):
             'social_factor': self.social_update_factor,
             'best_particle': best_particle,
             'best_fitness': best_fitness,
-            'out_bounds': out_bounds
+            'out_bounds': self.nout_bounds
         }
 
         self.salvar_registro_geral(registro = d,
