@@ -1,10 +1,12 @@
 from classes.enums_and_hints.problem_enum import ProblemFuncNames
 from classes.enums_and_hints.optimizers_enum import OptimizersNames
 from classes.enums_and_hints.experiments_dict import ExperimentsDict
+from classes.enums_and_hints.ga_dict import GADict
 from classes.enums_and_hints.pso_dict import PSODict
 from classes.enums_and_hints.de_dict import DEDict
 from classes.helper.utils import Utils
 
+from classes.optimizers.ga import GA
 from classes.optimizers.pso import PSO
 from classes.optimizers.de import DE
 
@@ -59,6 +61,23 @@ class Experiments:
                     mut_strategy = opt.mut_strategy)
             
             return de
+        
+        if isinstance(optimizer_dict, GADict):
+            opt: GADict = optimizer_dict
+
+            ga = GA(dimensions = opt.dimensions,
+                    population_size = opt.population_size,
+                    bounds = opt.bounds,
+                    total_pais_cruzamento = opt.total_pais_cruzamento,
+                    tipo_selecao_pais = opt.tipo_selecao_pais,
+                    total_pais_torneio = opt.total_pais_torneio,
+                    tipo_cruzamento = opt.tipo_cruzamento,
+                    taxa_cruzamento = opt.taxa_cruzamento,
+                    tipo_mutacao = opt.tipo_mutacao,
+                    taxa_mutacao = opt.taxa_mutacao,
+                    elitismo = opt.elitismo)
+            
+            return ga
     
     def main(self):
 
