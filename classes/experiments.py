@@ -27,8 +27,11 @@ class Experiments:
 
         return root_path, exp_path
     
-    def create_exp_dirs(self, problem_name: str):
-        problem_path = Utils.create_folder(path = self.exp_path, name = problem_name)
+    def create_opt_dir(self, optimizer_name: str):
+        return Utils.create_folder(path = self.exp_path, name = optimizer_name)
+    
+    def create_exp_dirs(self, path: str, problem_name: str):
+        problem_path = Utils.create_folder(path = path, name = problem_name)
         imgs_path = Utils.create_folder(path = problem_path, name = 'imgs')
 
         return problem_path, imgs_path
@@ -81,9 +84,13 @@ class Experiments:
     
     def main(self):
 
-        for idx, optimizer in enumerate(self.exp_dict.optimizers):
+        for optimizer in self.exp_dict.optimizers:
+            print(f"#### Algoritmo {optimizer.name.value} ####")
+            opt_path = self.create_opt_dir(optimizer_name = optimizer.name.value)
             for func in self.exp_dict.functions:
-                problem_path, imgs_path = self.create_exp_dirs(problem_name=func.value)
+                print(f"#### Função {func.value} ####")
+                problem_path, imgs_path = self.create_exp_dirs(path = opt_path, problem_name=func.value)
                 for exec in range(self.exp_dict.nexecucoes):
+                    print(f"#### Execução {exec} ####")
                     opt = self.init_optimizer(optimizer)
                     opt.main(func_name = func, nexecucao = exec, exp_path = problem_path, imgs_path = imgs_path)

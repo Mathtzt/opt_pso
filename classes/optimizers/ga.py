@@ -73,10 +73,9 @@ class GA(Algoritmo, pga.GA):
                         delay_after_gen = 0.0,
                         save_best_solutions = self.salvar_melhores_solucoes,
                         save_solutions = self.salvar_todas_solucoes,
-                        suppress_warnings = False)
+                        suppress_warnings = True)
         
         if self.valid_parameters:
-            print("\nExecução: " + str(nexecucao + 1))
             tempo_execucao = time.time()
             self.run()
             tempo_execucao = time.time() - tempo_execucao

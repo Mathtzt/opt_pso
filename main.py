@@ -47,10 +47,10 @@ ga = GADict(
 )
 
 exp_dict = ExperimentsDict(
-    name = 'analise_completa_f1',
+    name = 'exp_10d_f2',
     nexecucoes = 30,
     functions = [
-        ProblemFuncNames.F1
+        ProblemFuncNames.F2
         ],
     optimizers = [
         ga,
