@@ -9,7 +9,7 @@ from classes.enums_and_hints.de_dict import DEDict
 
 pso = PSODict(
     name = OptimizersNames.PSO,
-    dimensions = 10,
+    dimensions = 30,
     population_size = 10,
     bounds = [-100, 100],
     omega = .9,
@@ -23,7 +23,7 @@ pso = PSODict(
 
 de = DEDict(
     name = OptimizersNames.DE,
-    dimensions = 10,
+    dimensions = 30,
     population_size = 10,
     bounds = [-100, 100],
     perc_mutation = .8,
@@ -33,7 +33,7 @@ de = DEDict(
 
 ga = GADict(
     name = OptimizersNames.GA,
-    dimensions = 10,
+    dimensions = 30,
     population_size = 50,
     bounds = [-100, 100],
     total_pais_cruzamento = 2,
@@ -47,10 +47,16 @@ ga = GADict(
 )
 
 exp_dict = ExperimentsDict(
-    name = 'exp_10d_f4',
+    name = 'exp_30d',
     nexecucoes = 30,
     functions = [
-        ProblemFuncNames.F4
+        ProblemFuncNames.F1,
+        ProblemFuncNames.F2,
+        ProblemFuncNames.F4,
+        ProblemFuncNames.F6,
+        ProblemFuncNames.F7,
+        ProblemFuncNames.F9,
+        ProblemFuncNames.F14
         ],
     optimizers = [
         ga,
