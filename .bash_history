@@ -13,3 +13,17 @@ python main.py
 clear
 python main.py
 exit
+ls
+clear
+python main.py
+fg
+clear
+python main.py
+python main.py
+python main.py
+cls
+clear
+python main.py
+python main.py
+python main.py
+exit
