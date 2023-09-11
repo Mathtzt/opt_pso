@@ -4,11 +4,13 @@ from classes.enums_and_hints.experiments_dict import ExperimentsDict
 from classes.enums_and_hints.ga_dict import GADict
 from classes.enums_and_hints.pso_dict import PSODict
 from classes.enums_and_hints.de_dict import DEDict
+from classes.enums_and_hints.psor_dict import PSORDict
 from classes.helper.utils import Utils
 
 from classes.optimizers.ga import GA
 from classes.optimizers.pso import PSO
 from classes.optimizers.de import DE
+from classes.optimizers.pso_r import PSOR
 
 class Experiments:
     def __init__(self,
@@ -81,6 +83,23 @@ class Experiments:
                     elitismo = opt.elitismo)
             
             return ga
+        
+        if isinstance(optimizer_dict, PSORDict):
+            opt: PSORDict = optimizer_dict
+
+            psor = PSOR(dimensions = opt.dimensions,
+                      population_size = opt.population_size,
+                      bounds = opt.bounds,
+                      omega = opt.omega,
+                      min_speed = opt.min_speed,
+                      max_speed = opt.max_speed,
+                      cognitive_update_factor = opt.cognitive_update_factor,
+                      social_update_factor = opt.social_update_factor,
+                      reduce_omega_linearly = opt.reduce_omega_linearly,
+                      nsubspaces = opt.nsubspaces,
+                      r_size = opt.r_size)
+            
+            return psor
     
     def main(self):
 

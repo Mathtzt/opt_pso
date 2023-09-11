@@ -6,6 +6,7 @@ from classes.enums_and_hints.params_enum import DEMultStrategyNames, GAParentSel
 from classes.enums_and_hints.ga_dict import GADict
 from classes.enums_and_hints.pso_dict import PSODict
 from classes.enums_and_hints.de_dict import DEDict
+from classes.enums_and_hints.psor_dict import PSORDict
 
 pso = PSODict(
     name = OptimizersNames.PSO,
@@ -46,6 +47,21 @@ ga = GADict(
     elitismo = 1
 )
 
+psor = PSORDict(
+    name = OptimizersNames.PSOR,
+    dimensions = 30,
+    population_size = 20,
+    bounds = [-100, 100],
+    omega = .9,
+    min_speed = -50,
+    max_speed = 50,
+    cognitive_update_factor = 2.,
+    social_update_factor = 2.,
+    reduce_omega_linearly = True,
+    nsubspaces = 2,
+    r_size = 50
+)
+
 exp_dict = ExperimentsDict(
     name = 'exp_10d_f1',
     nexecucoes = 30,
@@ -59,9 +75,10 @@ exp_dict = ExperimentsDict(
         # ProblemFuncNames.F14
         ],
     optimizers = [
-        ga,
-        pso,
-        de,
+        # ga,
+        # pso,
+        # de,
+        psor
     ]
 )
 

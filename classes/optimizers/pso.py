@@ -124,7 +124,8 @@ class PSO(Algoritmo):
         self.criar_grafico_evolucao_fitness(hist_best_fitness = best_fitness_history,
                                             hist_avg_fitness = avg_fitness_history,
                                             imgs_path = imgs_path, 
-                                            img_name = f"pso_exec_{nexecucao}")
+                                            img_name = f"pso_exec_{nexecucao}",
+                                            use_log = True)
         self.criar_grafico_evolucao_distancia_media_pontos(hist_dist_pontos = avg_euclidian_distance_history,
                                                            imgs_path = imgs_path,
                                                            img_name = f"pso_distance_particles_{nexecucao}")
@@ -181,6 +182,7 @@ class PSO(Algoritmo):
         global_speed_update = global_update_factor * (best - particle)
 
         particle.speed = (omega * particle.speed) + (local_speed_update + global_speed_update)
+
         # verificando se a nova posição sairá do espaço de busca. Se sim, ajustando para os limites.     
         out_bounds = False
         for i, speed in enumerate(particle.speed):
