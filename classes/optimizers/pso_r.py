@@ -77,6 +77,7 @@ class PSOR(Algoritmo):
         best_pcentrals = [None] * self.nsubspaces
         best_subspaces_without_pcentral = [None] * self.nsubspaces
         best_subspaces_w_pcentral = [None] * self.nsubspaces
+        best_subspace = [None] * self.nsubspaces
         ###
         best = None
         omega = self.omega
@@ -91,7 +92,6 @@ class PSOR(Algoritmo):
         for idx, generation in enumerate(range(1, self.max_evaluations + 1)):
             # reduzindo omega linearmente
             if self.reduce_omega_linearly:
-                # omega = self.omega - (idx * (self.omega - 0.4) / (self.max_evaluations * self.reduction_speed_factor))
                 omega = self.omega - (self.omega - 0.4) * idx / (self.max_evaluations / self.population_size)
             
             ### 1. Iteração nas populações ###
@@ -106,6 +106,10 @@ class PSOR(Algoritmo):
                         particle.best = creator.Particle(particle)
                         particle.best.fitness.values = particle.fitness.values
                     # atualizando valor global
+                    # if self.check_best_subgroup_particle(best_subspace[isubpop], particle):
+                    #     best_subspace[isubpop] = creator.Particle(particle)
+                    #     best_subspace[isubpop].fitness.values = particle.fitness.values
+            
                     if self.check_best_subgroup_particle(best_subspaces_without_pcentral[isubpop], particle):
                         if not particle.is_pcentral:
                             best_subspaces_without_pcentral[isubpop] = creator.Particle(particle)
@@ -120,6 +124,7 @@ class PSOR(Algoritmo):
                     if best is None or best.size == 0 or best.fitness < particle.fitness:
                         best = creator.Particle(particle)
                         best.fitness.values = particle.fitness.values
+                        best.speed = particle.speed
                         improved = (ipart, True)
                         if particle.is_pcentral:
                             best_pcentrals[isubpop] = creator.Particle(particle)
@@ -139,7 +144,7 @@ class PSOR(Algoritmo):
             # atualizando velocidade e posição
             for isubpop, subpopulation in enumerate(population):
                 # Avaliar todas as partículas na subpopulação
-                for ipart, particle in enumerate(subpopulation): 
+                for ipart, particle in enumerate(subpopulation):
                     if improved[1] == True and improved[0] != ipart:
                         self.toolbox.update(particle, best, best_subspaces_w_pcentral[isubpop], subspaces[isubpop], omega, True)
                     else:
@@ -271,10 +276,10 @@ class PSOR(Algoritmo):
         for i, speed in enumerate(particle.speed):
             if speed > self.max_speed:
                 out_bounds = True
-                particle.speed[i] = self.max_speed
+                particle.speed[i] = best.speed.max()#self.max_speed
             if speed < self.min_speed:
                 out_bounds = True
-                particle.speed[i] = self.min_speed
+                particle.speed[i] = best.speed.min()#self.min_speed
         
         if out_bounds:
             self.nout_bounds += 1

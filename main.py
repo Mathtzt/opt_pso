@@ -63,16 +63,16 @@ psor = PSORDict(
 )
 
 exp_dict = ExperimentsDict(
-    name = 'exp_10d_f1',
+    name = 'exp_30d_speed',
     nexecucoes = 30,
     functions = [
-        ProblemFuncNames.F1,
+        # ProblemFuncNames.F1,
         # ProblemFuncNames.F2,
         # ProblemFuncNames.F4,
-        # ProblemFuncNames.F6,
-        # ProblemFuncNames.F7,
-        # ProblemFuncNames.F9,
-        # ProblemFuncNames.F14
+        ProblemFuncNames.F6,
+        ProblemFuncNames.F7,
+        ProblemFuncNames.F9,
+        ProblemFuncNames.F14
         ],
     optimizers = [
         # ga,
