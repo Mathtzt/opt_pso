@@ -10,7 +10,7 @@ from classes.enums_and_hints.psor_dict import PSORDict
 
 pso = PSODict(
     name = OptimizersNames.PSO,
-    dimensions = 10,
+    dimensions = 30,
     population_size = 10,
     bounds = [-100, 100],
     omega = .9,
@@ -49,7 +49,7 @@ ga = GADict(
 
 psor = PSORDict(
     name = OptimizersNames.PSOR,
-    dimensions = 10,
+    dimensions = 30,
     population_size = 20,
     bounds = [-100, 100],
     omega = .9,
@@ -63,7 +63,7 @@ psor = PSORDict(
 )
 
 exp_dict = ExperimentsDict(
-    name = 'f_psor_10d',
+    name = 'f_psor_30d',
     nexecucoes = 30,
     functions = [
         # ProblemFuncNames.F1,

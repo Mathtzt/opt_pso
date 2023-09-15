@@ -27,3 +27,11 @@ python main.py
 python main.py
 python main.py
 exit
+ls
+clear
+ls
+python main.py
+python main.py
+clear
+python main.py
+python main.py
