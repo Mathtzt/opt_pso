@@ -92,8 +92,6 @@ class PSO(Algoritmo):
                 stop_cond1 = abs(best.fitness.values[0] - func_[1]) < 10e-8
                 stop_cond2 = nevaluations >= self.max_evaluations
                 if stop_cond1 or stop_cond2:
-                    if stop_cond1:
-                        best.fitness.values = (0.0,)
                     finish_optimization = True
                     igeneration_stopped = idx
                     break
@@ -135,6 +133,10 @@ class PSO(Algoritmo):
                                   best_fitness = best.fitness.values[0],
                                   igeneration_stopped = igeneration_stopped,
                                   exp_path = exp_path)
+        
+        self.salvar_historico_em_arquivo_txt(best_fitness_history, exp_path, f'best_fitness_{nexecucao}')
+        self.salvar_historico_em_arquivo_txt(avg_fitness_history, exp_path, f'avg_fitness_{nexecucao}')
+        self.salvar_historico_em_arquivo_txt(avg_euclidian_distance_history, exp_path, f'dist_particles_{nexecucao}')
 
         del creator.FitnessMin
         del creator.Particle

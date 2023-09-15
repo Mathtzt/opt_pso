@@ -42,3 +42,30 @@ class Utils:
             dataframe_updated = pd.concat([df_loaded, dataframe], axis = 0)
 
             dataframe_updated.to_csv(FILE_PATH, index = False)
+
+    @staticmethod    
+    def save_list_as_txt(l: list, path: str = './', name: str = 'lista', log: bool = True):
+        with open(f'{path}/{name}.txt', 'w') as fp:
+            for item in l:
+                fp.write("%s\n" % item)
+
+        if log:
+            print(f'File {name} was saved.')
+
+    @staticmethod
+    def open_list_from_txt(path: str = './', name: str = 'lista', values_type = 'float'):
+        loaded_list = []
+
+        with open(f'{path}/{name}.txt', 'r') as fp:
+            for line in fp:
+                x = line[:-1]
+
+                if values_type == 'float':
+                    loaded_list.append(float(x))
+                elif values_type == 'int':
+                    loaded_list.append(int(x))
+                elif values_type == 'list':
+                    loaded_list.append(eval(x))
+                else:
+                    loaded_list.append(x)
+        return loaded_list

@@ -89,10 +89,14 @@ class PSOR(Algoritmo):
         avg_fitness_history = []
         avg_euclidian_distance_history = []
 
+        counter = 0
         for idx, generation in enumerate(range(1, self.max_evaluations + 1)):
             # reduzindo omega linearmente
             if self.reduce_omega_linearly:
                 omega = self.omega - (self.omega - 0.4) * idx / (self.max_evaluations / self.population_size)
+                if counter == 2:
+                    omega = 0.9
+                    counter = 0
             
             ### 1. Iteração nas populações ###
             for isubpop, subpopulation in enumerate(population):
@@ -135,8 +139,6 @@ class PSOR(Algoritmo):
                     stop_cond1 = abs(best.fitness.values[0] - func_[1]) < 10e-8
                     stop_cond2 = nevaluations >= self.max_evaluations
                     if stop_cond1 or stop_cond2:
-                        if stop_cond1:
-                            best.fitness.values = (0.0,)
                         finish_optimization = True
                         igeneration_stopped = idx
                         break
@@ -156,6 +158,8 @@ class PSOR(Algoritmo):
             if generation == 1 or generation % 500 == 0:
                 best_fitness_history.append(best.fitness.values)
                 pop_fitness_list = [part for subspace in population for part in subspace]
+                if generation > 500 and best_fitness_history[-1] == best_fitness_history[-2]:
+                    counter += 1
                 logbook.record(gen = generation,
                                evals = self.population_size,
                                **stats.compile(pop_fitness_list))
@@ -185,6 +189,10 @@ class PSOR(Algoritmo):
                                   best_fitness = best.fitness.values[0],
                                   igeneration_stopped = igeneration_stopped,
                                   exp_path = exp_path)
+        
+        self.salvar_historico_em_arquivo_txt(best_fitness_history, exp_path, f'best_fitness_{nexecucao}')
+        self.salvar_historico_em_arquivo_txt(avg_fitness_history, exp_path, f'avg_fitness_{nexecucao}')
+        self.salvar_historico_em_arquivo_txt(avg_euclidian_distance_history, exp_path, f'dist_particles_{nexecucao}')
 
         del creator.FitnessMin
         del creator.Particle
@@ -276,17 +284,22 @@ class PSOR(Algoritmo):
         for i, speed in enumerate(particle.speed):
             if speed > self.max_speed:
                 out_bounds = True
-                particle.speed[i] = best.speed.max()#self.max_speed
+                particle.speed[i] = best.speed.max()
             if speed < self.min_speed:
                 out_bounds = True
-                particle.speed[i] = best.speed.min()#self.min_speed
+                particle.speed[i] = best.speed.min()
         
         if out_bounds:
             self.nout_bounds += 1
 
         # atualizando posição
-        particle[:] = particle + particle.speed    
+        particle[:] = particle + particle.speed
 
+        for i, part in enumerate(particle):
+            if part > self.bounds[1]:
+                particle[i] = self.bounds[1] - (self.bounds[1] * 0.1)
+            if part < self.bounds[0]:
+                particle[i] = self.bounds[0] - (self.bounds[0] * 0.1)
         # atualizando posição
          #+ particle_adjusted if not self.use_hypeshere_control else particle_adjusted
         

@@ -106,6 +106,9 @@ class Algoritmo(ABC):
         df_registro = pd.DataFrame([registro])
         Utils.save_experiment_as_csv(base_dir = exp_path, dataframe = df_registro, filename = 'opt_history')
 
+    def salvar_historico_em_arquivo_txt(self, lista: list, caminho_do_arquivo: str, nome_do_arquivo: str):
+        Utils.save_list_as_txt(lista, caminho_do_arquivo, nome_do_arquivo)
+
     def criar_grafico_evolucao_fitness(self, 
                                        hist_best_fitness: list, 
                                        hist_avg_fitness: list, 

@@ -49,7 +49,7 @@ ga = GADict(
 
 psor = PSORDict(
     name = OptimizersNames.PSOR,
-    dimensions = 30,
+    dimensions = 10,
     population_size = 20,
     bounds = [-100, 100],
     omega = .9,
@@ -63,13 +63,13 @@ psor = PSORDict(
 )
 
 exp_dict = ExperimentsDict(
-    name = 'exp_30d_speed',
+    name = 'f_psor_10d',
     nexecucoes = 30,
     functions = [
         # ProblemFuncNames.F1,
         # ProblemFuncNames.F2,
         # ProblemFuncNames.F4,
-        ProblemFuncNames.F6,
+        # ProblemFuncNames.F6,
         ProblemFuncNames.F7,
         ProblemFuncNames.F9,
         ProblemFuncNames.F14
