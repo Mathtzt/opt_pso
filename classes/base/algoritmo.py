@@ -9,7 +9,6 @@ from classes.helper.utils import Utils
 from classes.enums_and_hints.problem_enum import ProblemFuncNames, ProblemFuncOptValue
 
 import opfunu
-# from opfunu.cec.cec2014.function import F1, F2, F4, F6, F7, F8, F9, F14
 
 class Algoritmo(ABC):
 

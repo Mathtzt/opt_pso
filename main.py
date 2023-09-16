@@ -66,17 +66,17 @@ exp_dict = ExperimentsDict(
     name = 'f_psor_30d',
     nexecucoes = 30,
     functions = [
-        # ProblemFuncNames.F1,
-        # ProblemFuncNames.F2,
-        # ProblemFuncNames.F4,
-        # ProblemFuncNames.F6,
+        ProblemFuncNames.F1,
+        ProblemFuncNames.F2,
+        ProblemFuncNames.F4,
+        ProblemFuncNames.F6,
         ProblemFuncNames.F7,
         ProblemFuncNames.F9,
         ProblemFuncNames.F14
         ],
     optimizers = [
         # ga,
-        # pso,
+        pso,
         # de,
         psor
     ]

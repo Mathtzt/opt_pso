@@ -77,7 +77,6 @@ class PSOR(Algoritmo):
         best_pcentrals = [None] * self.nsubspaces
         best_subspaces_without_pcentral = [None] * self.nsubspaces
         best_subspaces_w_pcentral = [None] * self.nsubspaces
-        best_subspace = [None] * self.nsubspaces
         ###
         best = None
         omega = self.omega
@@ -109,11 +108,7 @@ class PSOR(Algoritmo):
                     if particle.best is None or particle.best.size == 0 or particle.best.fitness < particle.fitness:
                         particle.best = creator.Particle(particle)
                         particle.best.fitness.values = particle.fitness.values
-                    # atualizando valor global
-                    # if self.check_best_subgroup_particle(best_subspace[isubpop], particle):
-                    #     best_subspace[isubpop] = creator.Particle(particle)
-                    #     best_subspace[isubpop].fitness.values = particle.fitness.values
-            
+                    # atualizando valor global           
                     if self.check_best_subgroup_particle(best_subspaces_without_pcentral[isubpop], particle):
                         if not particle.is_pcentral:
                             best_subspaces_without_pcentral[isubpop] = creator.Particle(particle)
@@ -222,19 +217,6 @@ class PSOR(Algoritmo):
                        best = None,
                        subpop = int,
                        is_pcentral = bool)
-        
-    # def create_particle(self, pbounds: list, subpop: int, is_pcentral: bool):
-    #     particle = creator.Particle(np.random.uniform(low = pbounds[0],
-    #                                                   high = pbounds[1],
-    #                                                   size = self.dimensions))
-    #     speed = abs(pbounds[1] - pbounds[0]) // 2
-    #     particle.speed = np.random.uniform(low = -speed,
-    #                                        high = speed,
-    #                                        size = self.dimensions)
-    #     particle.subpop = subpop
-    #     particle.is_pcentral = is_pcentral
-        
-    #     return particle
 
     def creating_particle_register(self):
         self.toolbox.register(alias = 'particleCreator',
@@ -300,19 +282,6 @@ class PSOR(Algoritmo):
                 particle[i] = self.bounds[1] - (self.bounds[1] * 0.1)
             if part < self.bounds[0]:
                 particle[i] = self.bounds[0] - (self.bounds[0] * 0.1)
-        # atualizando posição
-         #+ particle_adjusted if not self.use_hypeshere_control else particle_adjusted
-        
-        # local_speed_update = local_update_factor * (particle.best - particle)
-        # global_speed_update = global_update_factor * (best - particle)
-
-        # particle.speed = (omega * particle.speed) + (local_speed_update + global_speed_update)
-
-        # if self.use_hypeshere_control:
-        #     particle_adjusted = self.adjust_with_hypersphere(particle, particle.speed, r = 250)
-        # else:
-        #     particle_adjusted = particle.speed
-
 
     def adjust_with_hypersphere(self, original_particle, particle_speed, r):
         updated_particle = original_particle + particle_speed #
