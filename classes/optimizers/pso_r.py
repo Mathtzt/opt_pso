@@ -88,15 +88,10 @@ class PSOR(Algoritmo):
         avg_fitness_history = []
         avg_euclidian_distance_history = []
 
-        counter = 0
         for idx, generation in enumerate(range(1, self.max_evaluations + 1)):
             # reduzindo omega linearmente
             if self.reduce_omega_linearly:
                 omega = self.omega - (self.omega - 0.4) * idx / (self.max_evaluations / self.population_size)
-                if counter == 2:
-                    omega = 0.9
-                    counter = 0
-            
             ### 1. Iteração nas populações ###
             for isubpop, subpopulation in enumerate(population):
                 improved = (None, False)
@@ -113,13 +108,16 @@ class PSOR(Algoritmo):
                         if not particle.is_pcentral:
                             best_subspaces_without_pcentral[isubpop] = creator.Particle(particle)
                             best_subspaces_without_pcentral[isubpop].fitness.values = particle.fitness.values
+                            best_subspaces_without_pcentral[isubpop].speed = particle.speed
 
                             best_subspaces_w_pcentral[isubpop] = creator.Particle(particle)
                             best_subspaces_w_pcentral[isubpop].fitness.values = particle.fitness.values
+                            best_subspaces_w_pcentral[isubpop].speed = particle.speed
                     if self.check_best_subgroup_particle(best_subspaces_w_pcentral[isubpop], particle):
                         if particle.is_pcentral:
                             best_subspaces_w_pcentral[isubpop] = creator.Particle(particle)
                             best_subspaces_w_pcentral[isubpop].fitness.values = particle.fitness.values
+                            best_subspaces_w_pcentral[isubpop].speed = particle.speed
                     if best is None or best.size == 0 or best.fitness < particle.fitness:
                         best = creator.Particle(particle)
                         best.fitness.values = particle.fitness.values
@@ -143,9 +141,9 @@ class PSOR(Algoritmo):
                 # Avaliar todas as partículas na subpopulação
                 for ipart, particle in enumerate(subpopulation):
                     if improved[1] == True and improved[0] != ipart:
-                        self.toolbox.update(particle, best, best_subspaces_w_pcentral[isubpop], subspaces[isubpop], omega, True)
+                        self.toolbox.update(particle, best, best_subspaces_w_pcentral[isubpop], omega, True)
                     else:
-                        self.toolbox.update(particle, best, best_subspaces_without_pcentral[isubpop], subspaces[isubpop], omega, None)
+                        self.toolbox.update(particle, best, best_subspaces_without_pcentral[isubpop], omega, None)
 
             pop_list = [part for subspace in population for part in subspace]
             avg_euclidian_distance_history.append(self.calc_distancia_euclidiana_media_da_populacao(pop_list))
@@ -153,8 +151,6 @@ class PSOR(Algoritmo):
             if generation == 1 or generation % 500 == 0:
                 best_fitness_history.append(best.fitness.values)
                 pop_fitness_list = [part for subspace in population for part in subspace]
-                if generation > 500 and best_fitness_history[-1] == best_fitness_history[-2]:
-                    counter += 1
                 logbook.record(gen = generation,
                                evals = self.population_size,
                                **stats.compile(pop_fitness_list))
@@ -249,7 +245,7 @@ class PSOR(Algoritmo):
 
         return nspeed
 
-    def update_particle(self, particle, best, best_subspace, bounds, omega, part_subspace_improved = None):
+    def update_particle(self, particle, best, best_subspace, omega, part_subspace_improved = None):
         local_update_factor = self.cognitive_update_factor * np.random.uniform(0, 1, particle.size)
         global_update_factor = self.social_update_factor * np.random.uniform(0, 1, particle.size)
 
@@ -266,10 +262,10 @@ class PSOR(Algoritmo):
         for i, speed in enumerate(particle.speed):
             if speed > self.max_speed:
                 out_bounds = True
-                particle.speed[i] = best.speed.max()
+                particle.speed[i] = best_subspace.speed.max()#best.speed.max()
             if speed < self.min_speed:
                 out_bounds = True
-                particle.speed[i] = best.speed.min()
+                particle.speed[i] = best_subspace.speed.min()#best.speed.min()
         
         if out_bounds:
             self.nout_bounds += 1

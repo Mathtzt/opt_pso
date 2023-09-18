@@ -63,7 +63,7 @@ psor = PSORDict(
 )
 
 exp_dict = ExperimentsDict(
-    name = 'f_psor_30d',
+    name = 'ult_test_psor_30d',
     nexecucoes = 30,
     functions = [
         ProblemFuncNames.F1,
@@ -75,9 +75,9 @@ exp_dict = ExperimentsDict(
         ProblemFuncNames.F14
         ],
     optimizers = [
-        # ga,
+        ga,
         pso,
-        # de,
+        de,
         psor
     ]
 )
